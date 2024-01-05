@@ -15,22 +15,24 @@
   </div>
 
   <table class="table table-striped mt-2">
+    {{#each records}}
     <tr class="align-middle">
       <td class="col-4">
         <div class="d-flex flex-row">
-          <i class="fa-solid fa-house fs-2 mt-1" style="color: #7FFFD4;"></i>
+          <i class="fa-solid fa-house fs-2 mt-1"></i>
           <div class="d-flex flex-column ms-1 h-100">
-            <span class="align-self-start">午餐</span>
-            <span class="align-self-end" style="font-size: 8px;">2019/04/23</span>
+            <span>{{this.name}}</span>
+            <span style="font-size: 10px;">{{this.date}}</span>
           </div>
         </div>
       </td>
-      <td class="col-4">60</td>
+      <td class="col-4">{{this.amount}}</td>
       <td class="col-4">
         <a class="btn btn-primary me-2" href="">修改</a>
         <a class="btn btn-danger" href="">刪除</a>
       </td>
     </tr>
+    {{/each}}
   </table>
   <div class="text-center mt-5">
     <a class="btn btn-primary" href="/records/create" style="width: 140px;">新增支出</a>
