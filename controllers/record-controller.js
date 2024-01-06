@@ -12,7 +12,10 @@ const recordController = {
       Category.findAll({raw: true})
     ])
       .then(([records, categories]) => {
-        res.render('records', { records, categories })
+        res.render('records', { 
+        records, 
+        categories
+        })
       })
       .catch(err => res.status(422).json(err))
   }

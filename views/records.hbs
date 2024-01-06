@@ -16,8 +16,8 @@
     {{#each records}}
       <tr class="align-middle">
         <td class="col-4">
-          <div class="d-flex flex-row">
-            <i class="fa-solid fa-house fs-2 mt-1"></i>
+          <div class="d-flex flex-row align-items-center">
+            <i class="{{getIcons this.Category.name}} mt-1" style="font-size: 20px;"></i>
             <div class="d-flex flex-column ms-1 h-100">
               <span>{{this.name}}</span>
               <span style="font-size: 10px;">{{this.date}}</span>
