@@ -17,8 +17,8 @@
       <tr class="align-middle">
         <td class="col-4">
           <div class="d-flex flex-row align-items-center">
-            <i class="{{getIcons this.Category.name}} mt-1" style="font-size: 20px;"></i>
-            <div class="d-flex flex-column ms-1 h-100">
+            <i class="{{getIcons this.Category.name}} mt-1 me-2 text-success-emphasis" style="font-size: 30px; width: 15px;"></i>
+            <div class="d-flex flex-column ms-4 h-100">
               <span>{{this.name}}</span>
               <span style="font-size: 10px;">{{this.date}}</span>
             </div>
@@ -26,7 +26,7 @@
         </td>
         <td class="col-4">{{this.amount}}</td>
         <td class="col-4">
-          <a class="btn btn-primary me-2" href="">修改</a>
+          <a class="btn btn-primary me-2" href="/records/{{this.id}}/edit">修改</a>
           <a class="btn btn-danger" href="">刪除</a>
         </td>
       </tr>

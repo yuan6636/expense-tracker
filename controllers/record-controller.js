@@ -37,6 +37,29 @@ const recordController = {
     })
       .then(() => res.redirect('/records'))
       .catch(err => next(err))
+  },
+  editRecord: (req, res, next) => {
+    return Promise.all([
+      Category.findAll({ raw: true }),
+      Record.findByPk(req.params.id, { raw: true })
+    ])
+      .then( ([categories, record]) => res.render('edit-record', { 
+        categories,
+        record 
+      }))
+      .catch(err => next(err))
+  },
+  putRecord: (req, res, next) => {
+    const { name, date, amount, categoryId } = req.body
+    return Record.findByPk(req.params.id)
+      .then(record => record.update({
+        name,
+        date,
+        amount,
+        categoryId
+      }))
+      .then(() => res.redirect('/records'))
+      .catch(err => next(err))
   }
 }
 
