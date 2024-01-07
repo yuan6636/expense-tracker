@@ -26,8 +26,12 @@
         </td>
         <td class="col-4">{{this.amount}}</td>
         <td class="col-4">
-          <a class="btn btn-primary me-2" href="/records/{{this.id}}/edit">修改</a>
-          <a class="btn btn-danger" href="">刪除</a>
+          <div class="d-flex flex-row">
+            <a class="btn btn-primary me-2" href="/records/{{this.id}}/edit">修改</a>
+            <form action="/records/{{this.id}}?_method=DELETE" method="POST">
+              <button type="submit" class="btn btn-danger" onclick="return confirm(`你確定要刪除 {{this.name}} 嗎？`)">刪除</button>
+            </form>
+          </div>
         </td>
       </tr>
     {{/each}}

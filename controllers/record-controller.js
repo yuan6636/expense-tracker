@@ -60,6 +60,12 @@ const recordController = {
       }))
       .then(() => res.redirect('/records'))
       .catch(err => next(err))
+  },
+  deleteRecord: (req, res, next) => {
+    return Record.findByPk(req.params.id)
+      .then(record => record.destroy())
+      .then(() => res.redirect('/records'))
+      .catch(err => next(err))
   }
 }
 
