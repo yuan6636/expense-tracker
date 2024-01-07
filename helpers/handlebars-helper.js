@@ -7,5 +7,8 @@ const categoryIcons = {
 }
 
 module.exports = {
-  getIcons: (name) => categoryIcons[name]
+  getIcons: (name) => categoryIcons[name],
+  ifCond: function (a, b, options) {
+    return a === b ? options.fn(this) : options.inverse(this)
+  }
 }

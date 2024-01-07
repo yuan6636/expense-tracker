@@ -2,14 +2,14 @@
   <select class="form-select form-select-lg" name="category" id="category">
     <option>類別</option>
     {{#each categories}}
-      <option value="{{this.Id}}">{{this.name}}</option>
+      <option value="{{this.id}}">{{this.name}}</option>
     {{/each}}
   </select>
   <div class="mt-5 d-flex justify-content-evenly">
     <div class="fw-bold fs-4">
       總金額：
     </div>
-    <div class="text-danger" style="font-size: 100px;">25740</div>
+    <div class="text-danger" style="font-size: 100px;">{{totalAmount}}</div>
   </div>
 
   <table class="table table-striped mt-2">
@@ -32,7 +32,7 @@
       </tr>
     {{/each}}
   </table>
-  <div class="text-center mt-5">
-    <a class="btn btn-primary" href="/records/create" style="width: 140px;">新增支出</a>
+  <div class="text-center my-4">
+    <a class="btn btn-success" href="/records/create" style="width: 140px;">新增支出</a>
   </div>
 </div>

@@ -1,0 +1,57 @@
+<form action="/records" method="post">
+  <div class="card w-25 mx-auto mt-4 border-primary border-3">
+    <div class="card-body">
+      <h5 class="card-title text-center text-danger fw-bold">新增支出</h5>
+      <div class="p-3 d-flex flex-row gap-4">
+        <small class="text-secondary">*必填欄位</small>
+        <div class="mx-auto">請輸入你的支出</div>
+      </div>
+      <div class="p-3 row">
+        <label for="name" class="col-sm-4 col-form-label">
+          名稱*：
+        </label>
+        <div class="col-sm-8">
+          <input type="text" name="name" id="name" class="form-control border border-secondary" required>
+        </div>
+      </div>
+      <div class="p-3 row">
+        <label for="date" class="col-sm-4 col-form-label">
+          日期*：
+        </label>
+        <div class="col-sm-8">
+          <input type="date" name="date" id="date" class="form-control border border-secondary" required>
+        </div>
+      </div>
+      <div class="p-3 row">
+        <label for="categoryId" class="col-sm-4 col-form-label">
+          類別*：
+        </label>
+        <div class="col-sm-8">
+          <select class="form-select border border-secondary" name="categoryId" id="categoryId">
+            <option>類別</option>
+            {{#each categories}}
+              <option value="{{this.id}}" {{#ifCond categoryId this.id}}selected{{/ifCond}}>{{this.name}}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+      <div class="p-3 row">
+        <label for="amount" class="col-sm-4 col-form-label">
+          金額*：
+        </label>
+        <div class="col-sm-8">
+          <input type="number" name="amount" id="amount" class="form-control border border-secondary" min="0" required>
+        </div>
+      </div>
+
+      <div class="text-center my-4">
+        <button class="btn btn-success" type="submit">
+          新增支出
+        </button>
+        <a class="btn btn-secondary ms-2" href="/records">
+          返回
+        </a>
+      </div>
+    </div>
+  </div>
+</form>
