@@ -1,4 +1,5 @@
 const { Record, Category } = require('../models')
+const assert = require('assert')
 
 const recordController = {
   getRecords: (req, res, next) => {
@@ -27,7 +28,11 @@ const recordController = {
     .catch(err => next(err))
   },
   postRecord: (req, res, next) => {
-    const { name, date, amount, categoryId } = req.body;
+    const { name, date, amount, categoryId } = req.body
+    const requiredFields = [ name, date, amount, categoryId ]
+    const missingFields = requiredFields.filter(field => !field)
+
+    if (missingFields.length > 0) throw new Error('請填寫所有欄位!')
 
     return Record.create({
       name,
@@ -35,7 +40,11 @@ const recordController = {
       amount,
       categoryId
     })
-      .then(() => res.redirect('/records'))
+      .then((record) => {
+        assert(record, '這筆支出不存在!')
+        req.flash('success_messages', '成功建立一筆支出！')
+        res.redirect('/records')
+      })
       .catch(err => next(err))
   },
   editRecord: (req, res, next) => {
@@ -43,28 +52,42 @@ const recordController = {
       Category.findAll({ raw: true }),
       Record.findByPk(req.params.id, { raw: true })
     ])
-      .then( ([categories, record]) => res.render('edit-record', { 
+      .then( ([categories, record]) => {
+        assert(record, '這筆支出不存在!')
+        res.render('edit-record', { 
         categories,
         record 
-      }))
+      })})
       .catch(err => next(err))
   },
   putRecord: (req, res, next) => {
     const { name, date, amount, categoryId } = req.body
     return Record.findByPk(req.params.id)
-      .then(record => record.update({
+      .then(record => {
+        assert(record, '這筆支出不存在!')
+        record.update({
         name,
         date,
         amount,
         categoryId
-      }))
-      .then(() => res.redirect('/records'))
+      })})
+      .then(() => {
+        req.flash('success_messages', '成功修改一筆支出！')
+        res.redirect('/records')
+      })
       .catch(err => next(err))
   },
   deleteRecord: (req, res, next) => {
     return Record.findByPk(req.params.id)
-      .then(record => record.destroy())
-      .then(() => res.redirect('/records'))
+      .then(record => {
+        assert(record, '這筆支出不存在!')
+        
+        record.destroy()
+      })
+      .then(() => {
+        req.flash('success_messages', '成功刪除一筆支出！')
+        res.redirect('/records')
+      })
       .catch(err => next(err))
   }
 }

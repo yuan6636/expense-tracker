@@ -1,0 +1,12 @@
+{{#if error_messages}}
+  <div class="alert alert-danger  alert-dismissible fade show mt-2 w-50 mx-auto fw-bold" role="alert">
+    {{ error_messages }}
+    <button type="button" class="btn-close float-end" aria-label="Close" data-bs-dismiss="alert"></button>
+  </div>
+{{/if}}
+{{#if success_messages}}
+  <div class="alert alert-primary  alert-dismissible fade show mt-2 w-50 mx-auto fw-bold" role="alert">
+    {{ success_messages }}
+    <button type="button" class="btn-close float-end" aria-label="Close" data-bs-dismiss="alert"></button>
+  </div>
+{{/if}}
