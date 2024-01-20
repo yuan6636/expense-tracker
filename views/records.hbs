@@ -1,10 +1,18 @@
 <div class="mt-3 w-50 mx-auto">
-  <select class="form-select form-select-lg" name="category" id="category">
-    <option>類別</option>
-    {{#each categories}}
-      <option value="{{this.id}}">{{this.name}}</option>
-    {{/each}}
-  </select>
+  <div class="d-flex flex-row mt-3 align-items-center">
+    <form class="col-md-8" action="/records" method="GET" style="width: 33vw;">
+      <select class="form-select form-select-lg" name="categoryId" id="categoryId" onchange="this.form.submit()">
+        <option value="">類別</option>
+        {{#each categories}}
+          <option value="{{this.id}}" {{#ifCond this.id ../categoryId}}selected{{/ifCond}} >{{this.name}}</option>
+        {{/each}}
+      </select>
+    </form>
+    <div class="text-center col-md-3" style="width: 11vw;">
+      <a class="btn btn-success" href="/records/create">新增支出</a>
+    </div>
+  </div>
+
   <div class="mt-5 d-flex justify-content-evenly">
     <div class="fw-bold fs-4">
       總金額：
@@ -36,7 +44,29 @@
       </tr>
     {{/each}}
   </table>
-  <div class="text-center my-4">
-    <a class="btn btn-success" href="/records/create" style="width: 140px;">新增支出</a>
-  </div>
+  
 </div>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item {{#ifCond pagination.currentPage 1}}disabled{{/ifCond}}">
+      <a class="page-link" href="/records?page={{pagination.prev}}&categoryId={{categoryId}}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {{#each pagination.pages}}
+      {{#ifCond this ../pagination.currentPage}}
+        <li class="page-item active"><a class="page-link" href="#">{{this}}</a></li>
+      {{else}}
+        <li class="page-item">
+          <a class="page-link" href="/records?page={{this}}&categoryId={{../categoryId}}">{{this}}</a>
+        </li>
+      {{/ifCond}}
+    {{/each}}
+    <li class="page-item {{#ifCond pagination.currentPage pagination.totalPage}}disabled{{/ifCond}}">
+      <a class="page-link" href="/records?page={{pagination.next}}&categoryId={{categoryId}}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
