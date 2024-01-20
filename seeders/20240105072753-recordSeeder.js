@@ -1,48 +1,26 @@
 'use strict';
+const dayjs = require('dayjs')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
+    const currentDate = dayjs()
     const categories = await queryInterface.sequelize.query(
       'SELECT id FROM categories;',
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     )
-    await queryInterface.bulkInsert('Records', [{
-      name: '午餐',
-      date: '2019/4/23',
-      amount: 60,
-      created_at: new Date(),
-      updated_at: new Date(),
-      category_id: categories[3].id
-    }, {
-      name: '晚餐',
-      date: '2019/4/23',
-      amount: 60,
-      created_at: new Date(),
-      updated_at: new Date(),
-      category_id: categories[3].id
-    }, {
-      name: '捷運',
-      date: '2019/4/23',
-      amount: 120,
-      created_at: new Date(),
-      updated_at: new Date(),
-      category_id: categories[1].id
-    }, {
-      name: '電影：驚奇隊長',
-      date: '2019/4/23',
-      amount: 220,
-      created_at: new Date(),
-      updated_at: new Date(),
-      category_id: categories[2].id
-    }, {
-      name: '租金',
-      date: '2015/4/01',
-      amount: 25000,
-      created_at: new Date(),
-      updated_at: new Date(),
-      category_id: categories[0].id
-    }], {})
+    await queryInterface.bulkInsert('Records', 
+      Array.from({ length: 30 }, (_, index) => index + 1).map(item => {
+        return {
+          name: `expense-${item}`,
+          date: currentDate.format('YYYY/MM/DD'),
+          amount: Math.floor(Math.random() * 1000 + 1),
+          created_at: new Date(),
+          updated_at: new Date(),
+          category_id: categories[Math.floor(Math.random() * categories.length)].id
+        }
+      })
+    )
   },
 
   async down (queryInterface, Sequelize) {
