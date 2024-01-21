@@ -36,15 +36,15 @@ const recordController = {
   },
   createRecord: (req, res, next) => {
     return Category.findAll({ raw: true })
-      .then((categories) => res.render('create-record', { categories }))
-      .catch((err) => next(err));
+      .then(categories => res.render('create-record', { categories }))
+      .catch(err => next(err))
   },
   postRecord: (req, res, next) => {
-    const { name, date, amount, categoryId } = req.body;
-    const requiredFields = [name, date, amount, categoryId];
-    const missingFields = requiredFields.filter((field) => !field);
+    const { name, date, amount, categoryId } = req.body
+    const requiredFields = [name, date, amount, categoryId]
+    const missingFields = requiredFields.filter((field) => !field)
 
-    if (missingFields.length > 0) throw new Error('請填寫所有欄位!');
+    if (missingFields.length > 0) throw new Error('請填寫所有欄位!')
 
     return Record.create({
       name,
@@ -52,12 +52,12 @@ const recordController = {
       amount,
       categoryId,
     })
-      .then((record) => {
-        if (!record) throw new Error('這筆支出不存在!');
-        req.flash('success_messages', '成功建立一筆支出！');
-        res.redirect('/records');
+      .then(record => {
+        if (!record) throw new Error('這筆支出不存在!')
+        req.flash('success_messages', '成功建立一筆支出！')
+        res.redirect('/records')
       })
-      .catch((err) => next(err));
+      .catch(err => next(err))
   },
   editRecord: (req, res, next) => {
     return Promise.all([
@@ -65,45 +65,45 @@ const recordController = {
       Record.findByPk(req.params.id, { raw: true }),
     ])
       .then(([categories, record]) => {
-        if (!record) throw new Error('這筆支出不存在!');
+        if (!record) throw new Error('這筆支出不存在!')
         res.render('edit-record', {
           categories,
           record,
-        });
+        })
       })
-      .catch((err) => next(err));
+      .catch(err => next(err))
   },
   putRecord: (req, res, next) => {
-    const { name, date, amount, categoryId } = req.body;
+    const { name, date, amount, categoryId } = req.body
     return Record.findByPk(req.params.id)
-      .then((record) => {
-        if (!record) throw new Error('這筆支出不存在!');
+      .then(record => {
+        if (!record) throw new Error('這筆支出不存在!')
         return record.update({
           name,
           date,
           amount,
           categoryId,
-        });
+        })
       })
       .then(() => {
-        req.flash('success_messages', '成功修改一筆支出！');
-        res.redirect('/records');
+        req.flash('success_messages', '成功修改一筆支出！')
+        res.redirect('/records')
       })
-      .catch((err) => next(err));
+      .catch(err => next(err))
   },
   deleteRecord: (req, res, next) => {
     return Record.findByPk(req.params.id)
-      .then((record) => {
-        if (!record) throw new Error('這筆支出不存在!');
+      .then(record => {
+        if (!record) throw new Error('這筆支出不存在!')
 
-        record.destroy();
+        record.destroy()
       })
       .then(() => {
-        req.flash('success_messages', '成功刪除一筆支出！');
-        res.redirect('/records');
+        req.flash('success_messages', '成功刪除一筆支出！')
+        res.redirect('/records')
       })
-      .catch((err) => next(err));
-  },
-};
+      .catch(err => next(err))
+  }
+}
 
 module.exports = recordController
