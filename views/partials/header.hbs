@@ -1,6 +1,22 @@
-<nav class="navbar bg-secondary-subtle">
-  <div class="container-fluid">
-    <a class="navbar-brand fw-bold" href="/records">家庭記帳本</a>
-    <a class="btn btn-primary" href="/logout">登出</a>
-  </div>
-</nav>
+<header>
+  <nav class="navbar navbar-expand-lg bg-secondary-subtle">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="/records">家庭記帳本</a>
+      {{#if user}}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item d-inline-flex align-items-center">
+              <span class="text-muted nav-link fw-bold">{{ user.email }}，您好!</span>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-primary" href="/logout">登出</a>
+            </li>
+          </ul>
+        </div>
+      {{/if}}
+    </div>
+  </nav>
+</header>
