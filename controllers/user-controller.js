@@ -3,7 +3,7 @@ const { User } = require('../models')
 
 const userController = {
   signUpPage: (req, res) => {
-    res.render('signUp')
+    res.render('signup')
   },
   signUp: (req, res, next) => {
     if(req.body.password !== req.body.passwordCheck) throw new Error('密碼有誤，請重新輸入密碼')
@@ -24,6 +24,22 @@ const userController = {
         return res.redirect('/signin')
       })
       .catch(err => next(err))
+  },
+  signInPage: (req, res) => {
+    res.render('signin')
+  },
+  signIn: (req, res, next) => {
+    req.flash('success_messages', '成功登入!')
+    res.redirect('/records')
+  },
+  logout: (req, res) => {
+    req.flash('success_messages', '成功登出!')
+    req.logout(err => {
+      if (err) {
+        return next(err)
+      }
+      res.redirect('/signin')
+    })
   }
 }
 
