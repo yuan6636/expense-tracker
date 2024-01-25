@@ -4,18 +4,33 @@ const { getOffset, getPagination } = require('../helpers/pagination-helper')
 const recordController = {
   getRecords: (req, res, next) => {
     const categoryId = Number(req.query.categoryId) || ''
+    const userId = req.user.id
     const DEFAULT_LIMIT = 6
     const limit = Number(req.query.limit) || DEFAULT_LIMIT
     const page = Number(req.query.page) || 1
     const offset = getOffset(limit, page)
-    
+
     return Promise.all([
       Record.findAndCountAll({
-        attributes: ['id', 'name', 'date', 'amount', [sequelize.literal('(SELECT SUM(amount) FROM records)'), 'totalAmount']],
-        include: [Category],
-        where: { 
-          ...categoryId ? { categoryId } : {}
+        where: {
+          ...(categoryId ? { categoryId } : {}),
+          userId
         },
+        attributes: [
+          'id',
+          'name',
+          'date',
+          'amount',
+          [
+            sequelize.literal(
+              `(SELECT SUM(amount) FROM records 
+                WHERE user_id = ${userId} 
+                ${ categoryId ? `AND category_id = ${categoryId}` : '' })`
+            ),
+            'totalAmount'
+          ]
+        ],
+        include: [Category],
         offset,
         limit,
         nest: true,
@@ -24,13 +39,15 @@ const recordController = {
       Category.findAll({ raw: true })
     ])
       .then(([records, categories]) => {
-        res.render('records', { 
-        records: records.rows,
-        totalAmount: records.rows[0].totalAmount,
-        categories,
-        categoryId,
-        pagination: getPagination(limit, page, records.count)
+        let totalAmount = records.rows.length > 0 ? records.rows[0].totalAmount : 0
+        res.render('records', {
+          records: records.rows,
+          totalAmount,
+          categories,
+          categoryId,
+          pagination: getPagination(limit, page, records.count)
         })
+
       })
       .catch(err => res.status(422).json(err))
   },
@@ -43,6 +60,7 @@ const recordController = {
     const { name, date, amount, categoryId } = req.body
     const requiredFields = [name, date, amount, categoryId]
     const missingFields = requiredFields.filter((field) => !field)
+    const userId = req.user.id
 
     if (missingFields.length > 0) throw new Error('請填寫所有欄位!')
 
@@ -51,6 +69,7 @@ const recordController = {
       date,
       amount,
       categoryId,
+      userId
     })
       .then(record => {
         if (!record) throw new Error('這筆支出不存在!')
