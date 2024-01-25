@@ -1,6 +1,7 @@
 <div class="mt-3 w-50 mx-auto">
   <div class="d-flex flex-row mt-3 align-items-center">
     <form class="col-md-8" action="/records" method="GET" style="width: 33vw;">
+      <input type="hidden" id="page" name="page" value="1">
       <select class="form-select form-select-lg" name="categoryId" id="categoryId" onchange="this.form.submit()">
         <option value="">類別</option>
         {{#each categories}}
