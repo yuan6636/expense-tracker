@@ -23,7 +23,7 @@ const recordController = {
           'amount',
           [
             sequelize.literal(
-              `(SELECT SUM(amount) FROM records 
+              `(SELECT SUM(amount) FROM Records 
                 WHERE user_id = ${userId} 
                 ${ categoryId ? `AND category_id = ${categoryId}` : '' })`
             ),
@@ -51,10 +51,14 @@ const recordController = {
       })
       .catch(err => res.status(422).json(err))
   },
-  createRecord: (req, res, next) => {
-    return Category.findAll({ raw: true })
-      .then(categories => res.render('create-record', { categories }))
-      .catch(err => next(err))
+  createRecord: async(req, res, next) => {
+    try {
+      const categories = await Category.findAll({ raw: true })
+      res.render('create-record', { categories })
+      
+    } catch (err) {
+      next(err)
+    }
   },
   postRecord: (req, res, next) => {
     const { name, date, amount, categoryId } = req.body

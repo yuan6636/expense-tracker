@@ -30,7 +30,7 @@
           <select class="form-select border border-secondary" name="categoryId" id="categoryId">
             <option>類別</option>
             {{#each categories}}
-              <option value="{{this.id}}" {{#ifCond categoryId this.id}}selected{{/ifCond}}>{{this.name}}</option>
+              <option value="{{this.id}}" {{#ifCond ../categoryId this.id}}selected{{/ifCond}}>{{this.name}}</option>
             {{/each}}
           </select>
         </div>

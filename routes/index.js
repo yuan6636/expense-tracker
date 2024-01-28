@@ -23,6 +23,8 @@ router.get('/records', authenticated, recordController.getRecords)
 router.get('/records/create', recordController.createRecord)
 router.post('/records', recordController.postRecord)
 
+router.get('/health', (req, res) => res.send('ok'))
+
 router.use('/', (req, res) => res.redirect('/records'))
 
 router.use(generalErrorHandler)
