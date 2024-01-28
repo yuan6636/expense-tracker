@@ -101,7 +101,7 @@ const recordController = {
           name,
           date,
           amount,
-          categoryId,
+          categoryId
         })
       })
       .then(() => {
@@ -115,7 +115,7 @@ const recordController = {
       .then(record => {
         if (!record) throw new Error('這筆支出不存在!')
 
-        record.destroy()
+        return record.destroy()
       })
       .then(() => {
         req.flash('success_messages', '成功刪除一筆支出！')

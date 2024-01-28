@@ -30,8 +30,19 @@
     <p class="card-text text-muted text-center mt-3">
       <small>
         已經有帳號嗎？
-        <a href="/signin">回到登入頁~</a>
+        <a class="fw-bold" href="/signin">回到登入頁~</a>
       </small>
+      <div class="text-center">
+        <span class="text-dark fw-bold">
+          其他方式登入👇
+        </span>
+        <form action="/login/google" method="GET">
+          <button class="fw-bold btn btn-danger mx-auto tex" type="submit">
+            <i class="fa-regular fa-envelope me-2"></i>
+            Gmail
+          </button>
+        </form>
+      </div>
     </p>
   </div>
 </div>

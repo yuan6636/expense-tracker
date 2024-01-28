@@ -5,6 +5,9 @@ const { generalErrorHandler } = require('../middleware/error-handler')
 const recordController = require('../controllers/record-controller')
 const userController = require('../controllers/user-controller')
 const { authenticated } = require('../middleware/auth')
+const oauth = require('./oauth')
+
+router.use(oauth)
 
 router.get('/signup', userController.signUpPage)
 router.post('/signup', userController.signUp)
