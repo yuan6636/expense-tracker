@@ -31,6 +31,7 @@ const recordController = {
           ]
         ],
         include: [Category],
+        order:[['createdAt', 'DESC']],
         offset,
         limit,
         nest: true,
