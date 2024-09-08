@@ -32,3 +32,5 @@ app.use(routes)
 app.listen(port, () => {
   console.info(`App is running on localhost:${port}`)
 })
+
+module.exports = app
