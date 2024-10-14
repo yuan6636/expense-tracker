@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
+    "dbsetup": "node create-database.js && npx sequelize db:migrate",
     "seed": "npx sequelize db:seed:all",
     "test": "mocha tests --exit --recursive --timeout 5000",
     "test:watch": "mocha --watch tests"

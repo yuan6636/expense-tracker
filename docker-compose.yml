@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  webservice:
+    image: expense-tracker:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=mysql
+      - DB_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    depends_on:
+      - mysql
+    restart: on-failure
+  
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - mysql-data:/data/db
+
+volumes: 
+  mysql-data:
