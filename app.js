@@ -24,6 +24,7 @@ app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUniniti
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
+app.use(express.static('public'))
 
 app.use(messageHandler)
 

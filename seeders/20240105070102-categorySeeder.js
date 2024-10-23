@@ -8,7 +8,7 @@ module.exports = {
 
     if (count === 0) {
       await queryInterface.bulkInsert('Categories', 
-        ['家居物業', '交通出行', '休閒娛樂', '餐飲食品', '其他']
+        ['Home & Property', 'Transportation', 'Entertainment', 'Food & Beverage', 'Others']
           .map(item => {
             return {
               name: item,

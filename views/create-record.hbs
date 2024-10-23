@@ -1,34 +1,33 @@
 <form action="/records" method="POST">
-  <div class="card w-25 mx-auto mt-4 border-primary border-3">
-    <div class="card-body">
-      <h5 class="card-title text-center text-danger fw-bold">新增支出</h5>
-      <div class="p-3 d-flex flex-row gap-4">
-        <small class="text-secondary">*必填欄位</small>
-        <div class="mx-auto">請輸入你的支出</div>
+  <div class="card mx-auto mt-4 border-primary border-5 bg-light" style="width: 30%;">
+    <div class="card-body text-danger fw-bold">
+      <h3 class="card-title text-center fw-bold">Add Expense</h3>
+      <div class="p-3 d-flex flex-wrap text-secondary me-4">
+        <small>*Required fields</small>
       </div>
       <div class="p-3 row">
-        <label for="name" class="col-sm-4 col-form-label">
-          名稱*：
+        <label for="name" class="col-form-label col-sm-4">
+          Name*
         </label>
         <div class="col-sm-8">
-          <input type="text" name="name" id="name" class="form-control border border-secondary" required>
+          <input type="text" name="name" id="name" class="form-control border border-dark" required>
         </div>
       </div>
       <div class="p-3 row">
-        <label for="date" class="col-sm-4 col-form-label">
-          日期*：
+        <label for="date" class="col-form-label col-sm-4">
+          Date*
         </label>
         <div class="col-sm-8">
-          <input type="date" name="date" id="date" class="form-control border border-secondary" required>
+          <input type="date" name="date" id="date" class="form-control border border-dark" required>
         </div>
       </div>
       <div class="p-3 row">
-        <label for="categoryId" class="col-sm-4 col-form-label">
-          類別*：
+        <label for="categoryId" class="col-form-label col-sm-4">
+          Category*
         </label>
         <div class="col-sm-8">
-          <select class="form-select border border-secondary" name="categoryId" id="categoryId">
-            <option>類別</option>
+          <select class="form-select border border-dark" name="categoryId" id="categoryId">
+            <option>Category</option>
             {{#each categories}}
               <option value="{{this.id}}" {{#ifCond ../categoryId this.id}}selected{{/ifCond}}>{{this.name}}</option>
             {{/each}}
@@ -36,20 +35,20 @@
         </div>
       </div>
       <div class="p-3 row">
-        <label for="amount" class="col-sm-4 col-form-label">
-          金額*：
+        <label for="amount" class="col-form-label col-sm-4">
+          Amount*
         </label>
         <div class="col-sm-8">
-          <input type="number" name="amount" id="amount" class="form-control border border-secondary" min="0" required>
+          <input type="number" name="amount" id="amount" class="form-control border border-dark" min="0" required>
         </div>
       </div>
 
-      <div class="text-center my-4">
-        <button class="btn btn-success" type="submit">
-          新增
+      <div class="text-center mt-4">
+        <button class="btn btn-success rounded-pill w-100 mb-3" type="submit">
+          Create
         </button>
-        <a class="btn btn-secondary ms-2" href="/records">
-          返回
+        <a class="btn btn-secondary rounded-pill w-100" href="/records">
+          Back
         </a>
       </div>
     </div>

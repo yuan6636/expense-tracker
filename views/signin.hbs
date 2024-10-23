@@ -1,44 +1,45 @@
-<div class="card text-primary mt-2" style="width: 42vw; height: 100vh; margin: 0 auto;">
-  <img src="https://images.pexels.com/photos/47344/dollar-currency-money-us-dollar-47344.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img w-100 h-100" alt="money" style="opacity: 0.3; object-fit: fill;">
-  <div class="card-img-overlay">
-    <form action="/signin" method="POST">
-      <h2 class="card-title fw-bold mt-5 text-center">歡迎來到家庭記帳本(^o^)/</h2>
+<div class="card mx-auto my-5 text-danger fw-bold border-success border-5" style="width: 40vw;">
+  <div class="card-body p-4 bg-light">
+    <div class="my-4 d-flex justify-content-center">
+      <h5 class="fw-bold">
+        Wellcome to expense tracker
+        <i class="fa-solid fa-face-grin-wide"></i>
+      </h5>
+    </div>
 
-      <div class="my-5">
-        <label for="email" class="form-label fw-bold text-danger">
-          <i class="fa-solid fa-envelope"></i>
-          帳號 (信箱)：
-        </label>
-        <input type="email" class="form-control border-primary border-2" name="email" id="email" placeholder="name@example.com">
-      </div>
-
-      <div class="my-5">
-        <label for="password" class="form-label fw-bold text-danger">
-          <i class="fa-solid fa-key"></i>
-          密碼：
-        </label>
-        <input type="password" class="form-control border-primary border-2" name="password" id="password">
-      </div>
-      <div class="d-flex justify-content-center">
-        <button class="btn btn-success" type="submit">登入</button>
-      </div>
-    </form>
-
-    <p class="card-text text-muted text-center mt-3">
+    <p class="card-text">
+      <form action="/signin" method="POST">
+      
+        <div class="my-3">
+          <label for="email" class="form-label">
+            <i class="fa-solid fa-envelope"></i>
+            Account:
+          </label>
+          <input type="email" class="form-control border-dark border-2" name="email" id="email"
+            placeholder="name@example.com">
+        </div>
+      
+        <div class="my-3">
+          <label for="password" class="form-label">
+            <i class="fa-solid fa-key"></i>
+            Password:
+          </label>
+          <input type="password" class="form-control border-dark border-2" name="password" id="password">
+        </div>
+        <button class="btn btn-success rounded-pill w-100 mt-3" type="submit">Login</button>
+      </form>
+    </p>
+  
+    <p class="text-muted text-center mt-3">
       <small>
-        沒有帳號嗎？
-        <a class="fw-bold" href="/signup">註冊</a>
+        No accounts？
+        <a class="fw-bold" href="/signup">Register</a>
       </small>
-      <div class="text-center">
-        <span class="text-dark fw-bold">
-          其他方式登入👇
+      <div class="text-center text-muted">
+        <span class="fw-bold">
+          Other ways to login👉
+          <a href="/login/google" class="text-danger"><i class="fa-brands fa-google"></i></a>
         </span>
-        <form action="/login/google" method="GET">
-          <button class="fw-bold btn btn-danger mx-auto tex" type="submit">
-            <i class="fa-regular fa-envelope me-2"></i>
-            Gmail
-          </button>
-        </form>
       </div>
     </p>
   </div>
