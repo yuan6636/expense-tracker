@@ -2,12 +2,28 @@
   
   <form class="w-100" action="/records" method="GET">
     <input type="hidden" id="page" name="page" value="1">
-    <select class="form-select form-select-lg" name="categoryId" id="categoryId" onchange="this.form.submit()">
-      <option value="">Category</option>
-      {{#each categories}}
-      <option value="{{this.id}}" {{#ifCond this.id ../categoryId}}selected{{/ifCond}}>{{this.name}}</option>
-      {{/each}}
-    </select>
+    <div class="d-flex">
+      <select class="form-select form-select-sm me-2" name="categoryId" id="categoryId" onchange="this.form.submit()">
+        <option value="">All Categories</option>
+        {{#each categories}}
+        <option value="{{this.id}}" {{#ifCond this.id ../categoryId}}selected{{/ifCond}}>{{this.name}}</option>
+        {{/each}}
+      </select>
+      
+      <select class="form-select form-select-sm me-2" name="year" id="year" onchange="this.form.submit()">
+        <option value="">All years</option>
+        {{#each years}}
+        <option value="{{this}}" {{#ifCond this ../year}}selected{{/ifCond}}>{{this}}</option>
+        {{/each}}
+      </select>
+      
+      <select class="form-select form-select-sm" name="month" id="month" onchange="this.form.submit()">
+        <option value="">All months</option>
+        {{#each months}}
+        <option value="{{this}}" {{#ifCond this ../month}}selected{{/ifCond}}>{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
   </form>
 
   <div class="mt-3">

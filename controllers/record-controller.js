@@ -1,21 +1,39 @@
 const { Record, Category, sequelize } = require('../models')
 const { getOffset, getPagination } = require('../helpers/pagination-helper')
+const { timeArray } = require('../helpers/time-helper')
+const { Op } = require('sequelize')
 
 const recordController = {
   getRecords: async(req, res, next) => {
     try {
       const categoryId = Number(req.query.categoryId) || ''
+      const year = Number(req.query.year) || ''
+      const month = Number(req.query.month) || ''
       const userId = req.user.id
       const DEFAULT_LIMIT = 6
       const limit = Number(req.query.limit) || DEFAULT_LIMIT
       const page = Number(req.query.page) || 1
       const offset = getOffset(limit, page)
 
+      const dateCondition = {}
+
+      if (year && month) {
+        dateCondition[Op.and] = [
+          sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), year),
+          sequelize.where(sequelize.fn('MONTH', sequelize.col('date')), month)
+        ]
+      } else if (year) {
+        dateCondition[Op.and] = [
+          sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), year)
+        ]
+      }
+
       const [records, categories] = await Promise.all([
         Record.findAndCountAll({
           where: {
             ...(categoryId ? { categoryId } : {}),
-            userId
+            userId,
+            ...dateCondition
           },
           attributes: [
             'id',
@@ -40,13 +58,18 @@ const recordController = {
         }),
         Category.findAll({ raw: true })
       ])
+      
       let totalAmount = records.rows.length > 0 ? records.rows[0].totalAmount : 0
       res.render('records', {
         records: records.rows,
         totalAmount,
         categories,
         categoryId,
-        pagination: getPagination(limit, page, records.count)
+        pagination: getPagination(limit, page, records.count),
+        years: timeArray().yearArray,
+        months: timeArray().monthArray,
+        year,
+        month
       })
     } catch (err) {
       return res.status(422).json(err)
