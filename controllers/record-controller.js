@@ -6,28 +6,36 @@ const { Op } = require('sequelize')
 const recordController = {
   getRecords: async(req, res, next) => {
     try {
-      const categoryId = Number(req.query.categoryId) || ''
-      const year = Number(req.query.year) || ''
-      const month = Number(req.query.month) || ''
       const userId = req.user.id
       const DEFAULT_LIMIT = 6
-      const limit = Number(req.query.limit) || DEFAULT_LIMIT
-      const page = Number(req.query.page) || 1
+      const categoryId = parseInt(req.query.categoryId) || null
+      const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+      const page = parseInt(req.query.page) || 1
+      const year = parseInt(req.query.year) || null
+      const month = parseInt(req.query.month) || null
       const offset = getOffset(limit, page)
 
-      const dateCondition = {}
-
-      if (year && month) {
-        dateCondition[Op.and] = [
-          sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), year),
-          sequelize.where(sequelize.fn('MONTH', sequelize.col('date')), month)
-        ]
-      } else if (year) {
-        dateCondition[Op.and] = [
-          sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), year)
-        ]
+      // 設定年、月的搜尋條件
+      const getDateCondition = (year, month) => {
+        if (year && month) {
+          return {
+            [Op.and]: [
+              sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), year),
+              sequelize.where(sequelize.fn('MONTH', sequelize.col('date')), month)
+            ]
+          }
+        } else if (year) {
+          return {
+            [Op.and]: [
+              sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), year)
+            ]
+          }
+        } else {
+          return {}
+        }
       }
-
+      const dateCondition = getDateCondition(year, month)
+      
       const [records, categories] = await Promise.all([
         Record.findAndCountAll({
           where: {
@@ -35,20 +43,7 @@ const recordController = {
             userId,
             ...dateCondition
           },
-          attributes: [
-            'id',
-            'name',
-            'date',
-            'amount',
-            [
-              sequelize.literal(
-                `(SELECT SUM(amount) FROM Records 
-                  WHERE user_id = ${userId} 
-                  ${ categoryId ? `AND category_id = ${categoryId}` : '' })`
-              ),
-              'totalAmount'
-            ]
-          ],
+          attributes: ['id', 'name', 'date', 'amount' ],
           include: [Category],
           order:[['createdAt', 'DESC']],
           offset,
@@ -56,18 +51,56 @@ const recordController = {
           nest: true,
           raw: true
         }),
-        Category.findAll({ raw: true })
+        Category.findAll({ attributes: ['id', 'name'], raw: true })
+      ])
+
+      // 查出各類別總額及所有支出總額
+      const [categoryTotals, totalAmountData] = await Promise.all([
+        Record.findAll({
+          where: {
+            ...(categoryId ? { categoryId } : {}),
+            userId,
+            ...dateCondition
+          },
+          attributes: [
+            'categoryId',
+            [sequelize.fn('SUM', sequelize.col('amount')), 'categoryTotalAmount']
+          ],
+          group: 'categoryId',
+          order: [['categoryId']],
+          raw: true
+        }),
+        Record.findOne({
+          where: {
+            ...(categoryId ? { categoryId } : {}),
+            userId,
+            ...dateCondition
+          },
+          attributes: [[sequelize.fn('SUM', sequelize.col('amount')), 'totalAmount']],
+          raw: true
+        })
       ])
       
-      let totalAmount = records.rows.length > 0 ? records.rows[0].totalAmount : 0
+      // 產生對應 categoryAmounts 陣列的 categoryNames 陣列
+      const categoryMap = new Map(categories.map(category => [category.id, category.name]))
+      const categoryNames = categoryTotals.map(category => categoryMap.get(category.categoryId))
+      const categoryAmounts = categoryTotals.map(category => Number(category.categoryTotalAmount))
+
+      const chartData = { labels: categoryNames, data: categoryAmounts}
+
+      const totalAmount = totalAmountData?.totalAmount || 0
+      const timeData = timeArray()
+      
       res.render('records', {
         records: records.rows,
         totalAmount,
+        chartData: JSON.stringify(chartData),
+        chartDataLength: chartData.data.length,
         categories,
         categoryId,
         pagination: getPagination(limit, page, records.count),
-        years: timeArray().yearArray,
-        months: timeArray().monthArray,
+        years: timeData.yearArray,
+        months: timeData.monthArray,
         year,
         month
       })
