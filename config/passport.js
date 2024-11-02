@@ -10,24 +10,24 @@ passport.use(new LocalStrategy(
     passwordField: 'password',
     passReqToCallback: true
   },
-  (req, email, password, cb) => {
-    return User.findOne({ 
-      attributes: ['id', 'name', 'email', 'password'],
-      where: { email },
-      raw: true 
-    })
-      .then(user => {
-        if(!user) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤!'))
+  async (req, email, password, cb) => {
+    try {
+      const user = await User.findOne({
+        attributes: ['id', 'name', 'email', 'password'],
+        where: { email },
+        raw: true
+      })
 
-        bcrypt.compare(password, user.password).then(res => {
-          if (!res) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤!'))
-          return cb(null, user)
-        })
-      })
-      .catch(err => {
-        req.flash('error_messages', '登入失敗!')
-        cb(err)
-      })
+      if (!user) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤!'))
+
+      const result = await bcrypt.compare(password, user.password)
+      if (!result) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤!'))
+      return cb(null, user)
+
+    } catch (err) {
+      req.flash('error_messages', '登入失敗!')
+      return cb(err)
+    }
   }
 ))
 
@@ -38,37 +38,43 @@ passport.use(new GoogleStrategy(
     callbackURL: process.env.GOOGLE_CALLBACK_URL,
     passReqToCallback: true
   }, 
-  (req, accessToken, refreshToken, profile, cb) => {
-    const email = profile.email
-    const name = profile.displayName
-    
-    return User.findOne({ 
-      attributes: ['id', 'name', 'email'],
-      where: { email },
-      raw: true
-    })
-      .then(user => {
-        if (user) return cb(null, user)
+  async (req, accessToken, refreshToken, profile, cb) => {
+    try {
+      const email = profile.email
+      const name = profile.displayName
 
-        const randomPwd = Math.random().toString(36).slice(-8)
-        return bcrypt.hash(randomPwd, 10)
-          .then(hash => User.create({name, email, password: hash}))
-          .then(user => cb(null, {id: user.id, name: user.name, email: user.email}))
+      const user = await User.findOne({
+        attributes: ['id', 'name', 'email'],
+        where: { email },
+        raw: true
       })
-      .catch(err => {
-        req.flash('error_messages', '登入失敗!')
-        cb(err)
-      })
+
+      if (user) return cb(null, user)
+
+      const randomPwd = Math.random().toString(36).slice(-8)
+      const hash = await bcrypt.hash(randomPwd, 10)
+      const userProfile = await User.create({ name, email, password: hash })
+      return cb(null, { id: userProfile.id, name: userProfile.name, email: userProfile.email })
+
+    } catch (err) {
+      req.flash('error_messages', '登入失敗!')
+      return cb(err)
+    }
   }
 ))
 
 passport.serializeUser((user, cb) => {
   cb(null, user.id)
 })
-passport.deserializeUser((id, cb) => {
-  return User.findByPk(id)
-    .then(user => cb(null, user.toJSON()))
-    .catch(err => cb(err))
+passport.deserializeUser(async(id, cb) => {
+  try {
+    const user = await User.findByPk(id)
+    if (!user) return cb(new Error('找不到使用者'))
+    cb(null, user.toJSON())
+
+  } catch (error) {
+    cb(err)
+  }
 })
 
 module.exports = passport

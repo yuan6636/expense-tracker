@@ -16,10 +16,12 @@ router.get('/signin', userController.signInPage)
 router.post('/signin', passport.authenticate('local', { failureRedirect:'/signin', failureFlash: true }), userController.signIn)
 router.get('/logout', userController.logout)
 
+router.use(authenticated)
+
 router.get('/records/:id/edit', recordController.editRecord)
 router.put('/records/:id', recordController.putRecord)
 router.delete('/records/:id', recordController.deleteRecord)
-router.get('/records', authenticated, recordController.getRecords)
+router.get('/records', recordController.getRecords)
 router.get('/records/create', recordController.createRecord)
 router.post('/records', recordController.postRecord)
 

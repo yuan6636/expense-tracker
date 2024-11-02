@@ -27,7 +27,7 @@
         </label>
         <div class="col-sm-8">
           <select class="form-select border border-dark" name="categoryId" id="categoryId">
-            <option>Category</option>
+            <option value="" disabled selected>Category</option>
             {{#each categories}}
               <option value="{{this.id}}" {{#ifCond ../categoryId this.id}}selected{{/ifCond}}>{{this.name}}</option>
             {{/each}}
