@@ -1,9 +1,9 @@
 const categoryIcons = {
-  'Home & Property': 'fa-solid fa-house',
-  'Transportation': 'fa-solid fa-van-shuttle',
-  'Entertainment': 'fa-solid fa-face-grin-beam',
-  'Food & Beverage': 'fa-solid fa-utensils',
-  'Others': 'fa-solid fa-pen'
+  Home: 'fa-solid fa-house',
+  Transportation: 'fa-solid fa-van-shuttle',
+  Entertainment: 'fa-solid fa-face-grin-beam',
+  Food: 'fa-solid fa-utensils',
+  Others: 'fa-solid fa-pen'
 }
 
 module.exports = {

@@ -15,7 +15,14 @@ module.exports = (sequelize, DataTypes) => {
   Record.init({
     name: DataTypes.STRING,
     date: DataTypes.DATEONLY,
-    amount: DataTypes.INTEGER,
+    amount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+      validate: {
+        min: 0
+      }
+    },
     categoryId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER
   }, {

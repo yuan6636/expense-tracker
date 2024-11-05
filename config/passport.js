@@ -72,7 +72,7 @@ passport.deserializeUser(async(id, cb) => {
     if (!user) return cb(new Error('找不到使用者'))
     cb(null, user.toJSON())
 
-  } catch (error) {
+  } catch (err) {
     cb(err)
   }
 })
