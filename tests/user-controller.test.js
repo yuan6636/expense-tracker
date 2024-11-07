@@ -60,7 +60,7 @@ describe('# user-controller', () => {
       const user = await this.UserMock.findOne({ where: { email: 'user1@example.com' }})
       user.email.should.equal('user1@example.com')
 
-      req.flash.calledWith('success_messages', '註冊成功!').should.be.true
+      req.flash.calledWith('success_messages', 'Registration successful!').should.be.true
       res.redirect.calledWith('/signin').should.be.true
     })
   })
@@ -156,7 +156,7 @@ describe('# user-controller', () => {
 
       await this.userController.logout(req, res)
 
-      req.flash.calledWith('success_messages', '成功登出!').should.be.true
+      req.flash.calledWith('success_messages', 'Logout successful!').should.be.true
       req.logout.called.should.be.true
       res.redirect.calledWith('/signin').should.be.true
     })

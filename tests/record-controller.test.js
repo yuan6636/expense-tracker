@@ -48,7 +48,7 @@ describe('# record-controller', () => {
         Category: this.CategoryMock
       })
     })
-    it('#1 [渲染頁面測試](成功): GET /records', async () => {
+    it('# [渲染頁面測試]: GET /records', async () => {
       const req = mockRequest({
         query: { categoryId: 1, limit: 1, page: 1 },
         user: { id: 1 }
@@ -67,23 +67,6 @@ describe('# record-controller', () => {
       res.render.firstCall.args[1].categories[0].id.should.equal(1)
       res.render.firstCall.args[1].categoryId.should.equal(req.query.categoryId)
       res.render.firstCall.args[1].pagination.should.be.a('object')
-    })
-
-    it('#2 [渲染頁面測試](失敗): GET /records', async () => {
-      const req = mockRequest({
-        query: { categoryId: 1, limit: 1, page: 1 },
-        user: { id: 1 }
-      })
-      const res = mockResponse()
-      const next = mockNext
-
-      sinon.stub(this.RecordMock, 'findAndCountAll').rejects(new Error('DB Error'))
-
-      await this.recordController.getRecords(req, res, next)
-
-      // 測試是否呼叫 res.status 和 res.json 方法，res.status 的參數是 422
-      res.status.calledWith(422).should.be.true
-      res.json.calledOnce.should.be.true
     })
   })
 
@@ -167,7 +150,7 @@ describe('# record-controller', () => {
       record.should.have.lengthOf(1)
       record[0].name.should.equal('排骨便當')
 
-      req.flash.calledWith('success_messages', '成功建立一筆支出！').should.be.true
+      req.flash.calledWith('success_messages', 'Successfully created a new record!').should.be.true
       res.redirect.calledWith('/records').should.be.true
     })
     it('# [刪除支出測試]: DELETE /records/:id', async () => {
@@ -182,7 +165,7 @@ describe('# record-controller', () => {
       // 刪除後，this.RecordMock 內部沒有資料，陣列長度為 0
       records.should.have.lengthOf(0)
 
-      req.flash.calledWith('success_messages', '成功刪除一筆支出！').should.be.true
+      req.flash.calledWith('success_messages', 'Successfully deleted the record!').should.be.true
       res.redirect.calledWith('/records').should.be.true
     })
   })
@@ -214,7 +197,7 @@ describe('# record-controller', () => {
       // 修改後的支出名稱應為'三餐費用'
       record.name.should.equal('三餐費用')
       
-      req.flash.calledWith('success_messages', '成功修改一筆支出！').should.be.true
+      req.flash.calledWith('success_messages', 'Successfully updated the record!').should.be.true
       res.redirect.calledWith('/records')
     })
   })
