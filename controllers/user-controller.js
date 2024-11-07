@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs')
 const { User } = require('../models')
+const { setError, serverError, manageError } = require('../helpers/error-helper')
+const errorTypes = require('../config/errorTypes')
 
 const userController = {
   signUpPage: (req, res) => {
@@ -8,11 +10,27 @@ const userController = {
   signUp: async (req, res, next) => {
     try {
       const { name, email, password, passwordCheck } = req.body
-      if(!name || !email || !password) throw new Error('請輸入姓名、信箱、密碼')
-      if(password !== passwordCheck) throw new Error('密碼有誤，請重新輸入密碼')
+      if (!name || !email || !password) {
+        const status = 400
+        const message = 'Please enter your name, email, and password.'
+        const err = setError(status, message)
+        throw err
+      }
+
+      if (password !== passwordCheck) {
+        const status = 400
+        const message = 'Password is incorrect, please re-enter your password.'
+        const err = setError(status, message)
+        throw err
+      }
 
       const user = await User.findOne({ where: { email: req.body.email } })
-      if(user) throw new Error('信箱已被註冊，請重新輸入!')
+      if (user) {
+        const status = 400
+        const message = 'Email is already registered, please use a different email!'
+        const err = setError(status, message)
+        throw err
+      }
 
       const hash = await bcrypt.hash(req.body.password, 10)
 
@@ -21,26 +39,28 @@ const userController = {
         email: req.body.email,
         password: hash
       })
-      req.flash('success_messages', '註冊成功!')
+      req.flash('success_messages', 'Registration successful!')
       return res.redirect('/signin')
       
     } catch (err) {
-      next(err)
+      const SERVER_ERROR = errorTypes.SERVER_ERROR
+      manageError(err, SERVER_ERROR, next)
     }
   },
   signInPage: (req, res) => {
     res.render('signin')
   },
   signIn: (req, res, next) => {
-    req.flash('success_messages', '成功登入!')
+    req.flash('success_messages', 'Login successful!')
     res.redirect('/records')
   },
   logout: (req, res) => {
-    req.flash('success_messages', '成功登出!')
     req.logout(err => {
       if (err) {
-        return next(err)
+        const SERVER_ERROR = errorTypes.SERVER_ERROR
+        serverError(err, SERVER_ERROR, next)
       }
+      req.flash('success_messages', 'Logout successful!')
       res.redirect('/signin')
     })
   }

@@ -18,14 +18,14 @@ passport.use(new LocalStrategy(
         raw: true
       })
 
-      if (!user) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤!'))
+      if (!user) return cb(null, false, req.flash('error_messages', 'Incorrect email or password!'))
 
       const result = await bcrypt.compare(password, user.password)
-      if (!result) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤!'))
+      if (!result) return cb(null, false, req.flash('error_messages', 'Incorrect email or password!'))
       return cb(null, user)
 
     } catch (err) {
-      req.flash('error_messages', '登入失敗!')
+      req.flash('error_messages', 'Login failed!')
       return cb(err)
     }
   }
@@ -57,7 +57,7 @@ passport.use(new GoogleStrategy(
       return cb(null, { id: userProfile.id, name: userProfile.name, email: userProfile.email })
 
     } catch (err) {
-      req.flash('error_messages', '登入失敗!')
+      req.flash('error_messages', 'Login failed!')
       return cb(err)
     }
   }
@@ -69,7 +69,7 @@ passport.serializeUser((user, cb) => {
 passport.deserializeUser(async(id, cb) => {
   try {
     const user = await User.findByPk(id)
-    if (!user) return cb(new Error('找不到使用者'))
+    if (!user) return cb(new Error('User not found.'))
     cb(null, user.toJSON())
 
   } catch (err) {

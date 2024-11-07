@@ -2,6 +2,8 @@ const { Record, Category, sequelize } = require('../models')
 const { getOffset, getPagination } = require('../helpers/pagination-helper')
 const { timeArray } = require('../helpers/time-helper')
 const { Op } = require('sequelize')
+const { setError, serverError, manageError } = require('../helpers/error-helper')
+const errorTypes = require('../config/errorTypes')
 
 const recordController = {
   getRecords: async(req, res, next) => {
@@ -105,7 +107,8 @@ const recordController = {
         month
       })
     } catch (err) {
-      return res.status(422).json(err)
+      const SERVER_ERROR = errorTypes.SERVER_ERROR
+      serverError(err, SERVER_ERROR, next)
     }
   },
   createRecord: async(req, res, next) => {
@@ -114,7 +117,8 @@ const recordController = {
       res.render('create-record', { categories })
       
     } catch (err) {
-      next(err)
+      const SERVER_ERROR = errorTypes.SERVER_ERROR
+      serverError(err, SERVER_ERROR, next)
     }
   },
   postRecord: async (req, res, next) => {
@@ -124,7 +128,12 @@ const recordController = {
       const missingFields = requiredFields.filter((field) => !field)
       const userId = req.user.id
 
-      if (missingFields.length > 0) throw new Error('請填寫所有欄位!')
+      if (missingFields.length > 0) {
+        const status = 400
+        const message = 'Please fill in all fields!'
+        const err = setError(status, message)
+        throw err
+      }
 
       const record = await Record.create({
         name,
@@ -134,12 +143,18 @@ const recordController = {
         userId
       })
 
-      if (!record) throw new Error('這筆支出不存在!')
-      req.flash('success_messages', '成功建立一筆支出！')
+      if (!record) {
+        const status = 404
+        const message = 'This record does not exist!'
+        const err = setError(status, message)
+        throw err
+      }
+      req.flash('success_messages', 'Successfully created a new record!')
       res.redirect('/records')
 
     } catch (err) {
-      next(err)
+      const SERVER_ERROR = errorTypes.SERVER_ERROR
+      manageError(err, SERVER_ERROR, next)
     }
   },
   editRecord: async (req, res, next) => {
@@ -149,14 +164,20 @@ const recordController = {
         Record.findByPk(req.params.id, { raw: true }),
       ])
 
-      if (!record) throw new Error('這筆支出不存在!')
+      if (!record) {
+        const status = 404
+        const message = 'This record does not exist!'
+        const err = setError(status, message)
+        throw err
+      }
 
       res.render('edit-record', {
         categories,
         record,
       })
     } catch (err) {
-      next(err)
+      const SERVER_ERROR = errorTypes.SERVER_ERROR
+      serverError(err, SERVER_ERROR, next)
     }
   },
   putRecord: async (req, res, next) => {
@@ -164,29 +185,42 @@ const recordController = {
       const { name, date, amount, categoryId } = req.body
       const record = await Record.findByPk(req.params.id)
 
-      if (!record) throw new Error('這筆支出不存在!')
+      if (!record) {
+        const status = 404
+        const message = 'This record does not exist!'
+        const err = setError(status, message)
+        throw err
+      }
+
       await record.update({
         name,
         date,
         amount,
         categoryId
       })
-      req.flash('success_messages', '成功修改一筆支出！')
+      req.flash('success_messages', 'Successfully updated the record!')
       res.redirect('/records')
-    } catch (error) {
-      next(err)
+    } catch (err) {
+      const SERVER_ERROR = errorTypes.SERVER_ERROR
+      manageError(err, SERVER_ERROR, next)
     }
   },
   deleteRecord: async (req, res, next) => {
     try {
       const record = await Record.findByPk(req.params.id)
-      if (!record) throw new Error('這筆支出不存在!')
+      if (!record) {
+        const status = 404
+        const message = 'This record does not exist!'
+        const err = setError(status, message)
+        throw err
+      }
       await record.destroy()
-      req.flash('success_messages', '成功刪除一筆支出！')
+      req.flash('success_messages', 'Successfully deleted the record!')
       res.redirect('/records')
       
     } catch (err) {
-      next(err)
+      const SERVER_ERROR = errorTypes.SERVER_ERROR
+      manageError(err, SERVER_ERROR, next)
     }
   }
 }
