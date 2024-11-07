@@ -107,7 +107,10 @@ npm run test
 ```
 
 ## Demo
-![Demo](https://github.com/user-attachments/assets/c1d2b5b4-4454-4e45-bb74-d33e8000a730)
+<video src="https://github.com/user-attachments/assets/c1d2b5b4-4454-4e45-bb74-d33e8000a730">
+  Your browser doesn't support embedded video.
+  ![Click here to watch the video](https://youtu.be/11ndAa2SwNo)
+</video>
 
 ## Screenshots
 
