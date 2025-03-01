@@ -42,19 +42,19 @@ This project is designed for recording personal expenses. Users can search, add,
 $ git clone https://github.com/yuan6636/expense-tracker.git
 ```
 
-1. Navigate to the `expense-tracker` folder
+2. Navigate to the `expense-tracker` folder
 
 ```bash
 $ cd expense-tracker
 ```
 
-1. Install packages with `npm`
+3. Install packages with `npm`
 
 ```bash
 $ npm install
 ```
 
-1. Ensure `config.js` has the correct `password` and `database` settings
+4. Ensure `config.js` has the correct `password` and `database` settings
 
 ```js
 "development": {
